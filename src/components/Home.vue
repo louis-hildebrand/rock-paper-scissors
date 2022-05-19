@@ -26,7 +26,7 @@ export default {
       directions: [],
       speed_x: 150,
       speed_y: 150,
-      refresh_time: 25
+      refresh_time: 33
     }
   },
   computed: {
