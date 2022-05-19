@@ -1,6 +1,4 @@
 <template>
-  <h1>Rock Paper Scissors</h1>
-
   <div class="playing-area" ref="playing_area">
     <div v-for="rock in rocks" :key="rock.index">
       <img v-bind:src="require('@/assets/rock.png')" alt="rock" v-bind:style="img_style(rock.index)" />
@@ -21,7 +19,7 @@ export default {
       playing_area_width: 0,
       playing_area_height: 0,
       img_size: 0,
-      num_objects: 50,
+      num_objects: 60,
       obj_types: [],
       positions: [],
       directions: [],
@@ -172,9 +170,9 @@ export default {
 <style>
 .playing-area {
   position:absolute;
-  left:7.5vw;
-  width:85vw;
-  height:80vh;
-  background-color:rgb(180, 180, 180)
+  left:0vw;
+  top:0vh;
+  width:100vw;
+  height:100vh;
 }
 </style>
