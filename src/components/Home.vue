@@ -20,6 +20,7 @@ export default {
     return {
       playing_area_width: 0,
       playing_area_height: 0,
+      img_size: 0,
       num_objects: 50,
       obj_types: [],
       positions: [],
@@ -30,9 +31,6 @@ export default {
     }
   },
   computed: {
-    img_size: function() {
-      return 0.1 * Math.min(this.playing_area_width, this.playing_area_height)
-    },
     rocks: function() {
       return this.objects_by_type("rock");
     },
@@ -48,6 +46,7 @@ export default {
       const playing_area_rect = this.$refs.playing_area.getBoundingClientRect();
       this.playing_area_width = playing_area_rect.width;
       this.playing_area_height = playing_area_rect.height;
+      this.img_size = 0.1 * Math.min(this.playing_area_width, this.playing_area_height)
 
       this.generate_initial_objects()
       
@@ -134,12 +133,24 @@ export default {
     },
     move(index) {
       this.positions[index].x += this.vel_x(index) * this.refresh_time / 1000;
-      if (this.positions[index].x <= 0 || this.positions[index].x + this.img_size >= this.playing_area_width)
-        this.directions[index].x *= -1;
+      if (this.positions[index].x <= 0) {
+        this.directions[index].x = 1;
+        this.positions[index].x = 0;
+      }
+      else if (this.positions[index].x + this.img_size >= this.playing_area_width) {
+        this.directions[index].x = -1;
+        this.positions[index].x = this.playing_area_width - this.img_size;
+      }
       
       this.positions[index].y += this.vel_y(index) * this.refresh_time / 1000;
-      if (this.positions[index].y <= 0 || this.positions[index].y + this.img_size >= this.playing_area_height)
-        this.directions[index].y *= -1;
+      if (this.positions[index].y <= 0) {
+        this.directions[index].y = 1;
+        this.positions[index].y = 0;
+      }
+      else if (this.positions[index].y + this.img_size >= this.playing_area_height) {
+        this.directions[index].y = -1;
+        this.positions[index].y = this.playing_area_height - this.img_size;
+      }
     }
   },
   mounted() {
@@ -150,7 +161,8 @@ export default {
 
 <style>
 .playing-area {
-  margin:auto;
+  position:absolute;
+  left:7.5vw;
   width:85vw;
   height:80vh;
   background-color:rgb(180, 180, 180)
