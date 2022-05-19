@@ -16,6 +16,7 @@
 export default {
   data() {
     return {
+      polling: null,
       playing_area_width: 0,
       playing_area_height: 0,
       img_size: 0,
@@ -48,7 +49,7 @@ export default {
 
       this.generate_initial_objects()
       
-      setInterval(this.move_all, this.refresh_time);
+      this.polling = setInterval(this.move_all, this.refresh_time);
     },
     generate_initial_objects() {
       for (var i = 0; i < this.num_objects; i++) {
@@ -127,10 +128,19 @@ export default {
       this.directions[i] = this.directions[j];
       this.directions[j] = temp;
     },
+    all_same_type() {
+      const first_type = this.obj_types[0];
+      for (var i = 1; i < this.num_objects; i++) {
+        if (this.obj_types[i] !== first_type)
+          return false;
+      }
+      return true;
+    },
     move_all() {
       for (var i = 0; i < this.num_objects; i++) {
         this.move(i);
       }
+      
       for (var i = 0; i < this.num_objects - 1; i++) {
         for (var j = i + 1; j < this.num_objects; j++) {
           if (this.are_colliding(i, j)) {
@@ -138,6 +148,9 @@ export default {
           }
         }
       }
+
+      if (this.all_same_type())
+        clearInterval(this.polling)
     },
     move(index) {
       this.positions[index].x += this.vel_x(index) * this.refresh_time / 1000;
