@@ -25,9 +25,9 @@ export default {
       obj_types: [],
       positions: [],
       directions: [],
-      speed_x: 250,
-      speed_y: 250,
-      refresh_time: 10
+      speed_x: 150,
+      speed_y: 150,
+      refresh_time: 25
     }
   },
   computed: {
@@ -93,7 +93,17 @@ export default {
     are_colliding(i, j) {
       const pos_i = this.positions[i];
       const pos_j = this.positions[j];
-      return Math.abs(pos_i.x - pos_j.x) < this.img_size && Math.abs(pos_i.y - pos_j.y) < this.img_size;
+      const intersecting = Math.abs(pos_i.x - pos_j.x) < this.img_size && Math.abs(pos_i.y - pos_j.y) < this.img_size;
+      
+      var moving_closer = false;
+      const [left, right] = pos_i.x < pos_j.x ? [i, j] : [j, i];
+      if (this.directions[left].x == 1 && this.directions[right].x == -1)
+        moving_closer = true;
+      const [top, bot] = pos_i.y < pos_j.y ? [i, j] : [j, i];
+      if (this.directions[top].y == 1 && this.directions[bot].y == -1)
+        moving_closer = true;
+
+      return intersecting && moving_closer;
     },
     play_rock_paper_scissors(i, j) {
       const o_types = [this.obj_types[i], this.obj_types[j]];
